@@ -19,30 +19,38 @@ while True:
     temp_text = temp_tweet[0].text
     temp_text = temp_text.split(' ')
     
-    
     if(temp_id != last_id):
         #tweets should have syntax of @bot, ticker, function
         last_id = temp_id
         ticker = temp_text[1]
         function = temp_text[2]
         if(function == 'price' or function == 'Price'):
-            temp_data = backend.get_price(ticker, 1, password.TS)
-            reply='Price: ' + str(temp_data[0])
-            api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
-            print(temp_data)
+            try:
+                temp_data = backend.get_price(ticker, 1, password.TS)
+                reply='Price: $' + str(temp_data[0])
+                api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+                print(temp_data)
+            except ValueError:
+                api.update_status('Invalid Ticker', in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+                print('invalid ticker')
         elif(function == "macd" or function == "MACD"):
-            temp_data = backend.MACD(ticker, 1, password.TS)
-            reply = 'MACD: ' + str(temp_data[0])
-            api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
-            print(temp_data)
+            try:
+                temp_data = backend.MACD(ticker, 1, password.TS)
+                reply = 'MACD: $' + str(temp_data[0])
+                api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+                print(temp_data)
+            except ValueError:
+                api.update_status('Invalid Ticker', in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+                print('invalid ticker')
         elif(function == 'rsi' or function == "RSI"):
-            temp_data = backend.RSI(ticker, 1, password.TS)
-            reply='RSI: ' + str(temp_data[0])
-            api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
-            print(temp_data)
+            try:
+                temp_data = backend.RSI(ticker, 1, password.TS)
+                reply='RSI: $' + str(temp_data[0])
+                api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+                print(temp_data)
+            except ValueError:
+                api.update_status('Invalid Ticker', in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+                print('invalid ticker')
     else:
         print('no new tweets')
     time.sleep(30)
-
-
-
