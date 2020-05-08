@@ -1,6 +1,7 @@
 import tweepy
 import backend
 import password
+import time
 
 auth = tweepy.OAuthHandler(password.consumer_key, password.consumer_secret)
 auth.set_access_token(password.access_token, password.access_token_secret)
@@ -9,15 +10,39 @@ api = tweepy.API(auth)
 
 public_tweets = api.mentions_timeline()
 last_tweet = public_tweets[0].text
-reply_id = public_tweets[0].id
+last_id = public_tweets[0].id
 last_tweet = last_tweet.split(' ')
-api.update_status('hello my friend', in_reply_to_status_id = reply_id, auto_populate_reply_metadata = True)
-# print(public_tweets)
-# print(last_tweet[1]) 
 
-# for tweet in last_tweet:
-#     if tweet == 'hello':
-#         print(1)
-#     else:
-#         print(2)
-#     # print(tweet.text)
+while True:
+    temp_tweet = api.mentions_timeline()
+    temp_id = temp_tweet[0].id
+    temp_text = temp_tweet[0].text
+    temp_text = temp_text.split(' ')
+    
+    
+    if(temp_id != last_id):
+        #tweets should have syntax of @bot, ticker, function
+        last_id = temp_id
+        ticker = temp_text[1]
+        function = temp_text[2]
+        if(function == 'price' or function == 'Price'):
+            temp_data = backend.get_price(ticker, 1, password.TS)
+            reply='Price: ' + str(temp_data[0])
+            api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+            print(temp_data)
+        elif(function == "macd" or function == "MACD"):
+            temp_data = backend.MACD(ticker, 1, password.TS)
+            reply = 'MACD: ' + str(temp_data[0])
+            api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+            print(temp_data)
+        elif(function == 'rsi' or function == "RSI"):
+            temp_data = backend.RSI(ticker, 1, password.TS)
+            reply='RSI: ' + str(temp_data[0])
+            api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+            print(temp_data)
+    else:
+        print('no new tweets')
+    time.sleep(30)
+
+
+
