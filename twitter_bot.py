@@ -1,14 +1,9 @@
 import tweepy
 import backend
+import password
 
-consumer_key = 'sdf'
-consumer_secret = 'sdf'
-access_token = 'sdf'
-access_token_secret = 'sdf'
-
-
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
+auth = tweepy.OAuthHandler(password.consumer_key, password.consumer_secret)
+auth.set_access_token(password.access_token, password.access_token_secret)
 
 api = tweepy.API(auth)
 
