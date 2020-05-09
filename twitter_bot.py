@@ -36,7 +36,9 @@ while True:
         elif(function == "macd" or function == "MACD"):
             try:
                 temp_data = backend.MACD(ticker, 1, password.TS)
-                reply = 'MACD: $' + str(temp_data[0])
+                temp_string = str(temp_data[0])
+                temp_string = temp_string[1:-1]
+                reply = 'MACD: $' + temp_string
                 api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
                 print(temp_data)
             except ValueError:
@@ -45,12 +47,17 @@ while True:
         elif(function == 'rsi' or function == "RSI"):
             try:
                 temp_data = backend.RSI(ticker, 1, password.TS)
-                reply='RSI: $' + str(temp_data[0])
+                temp_string = str(temp_data[0])
+                temp_string = temp_string[1:-1]
+                reply='RSI: $' +  temp_string
                 api.update_status(reply, in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
                 print(temp_data)
             except ValueError:
                 api.update_status('Invalid Ticker', in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
                 print('invalid ticker')
+        else:
+            api.update_status('Invalid Command', in_reply_to_status_id = temp_id, auto_populate_reply_metadata = True)
+            print('invalid command')
     else:
         print('no new tweets')
     time.sleep(30)
